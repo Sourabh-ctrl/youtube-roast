@@ -11,7 +11,7 @@ import { sessionMiddleware } from './config/session.js'
 import { assertGoogleConfigured } from './config/google.js'
 import { AppError } from './utils/appError.js'
 
-export function createApp(config, { mongoClient } = {}) {
+export function createApp(config, { mongoClient, init } = {}) {
   assertGoogleConfigured()
 
   const app = express()
@@ -32,6 +32,10 @@ export function createApp(config, { mongoClient } = {}) {
   )
   app.use(express.json({ limit: '10kb' }))
   app.use(sessionMiddleware(config, { mongoClient }))
+
+  // Optional lazy initialization (e.g. connect to MongoDB on first request)
+  // runs before the routes so handlers can rely on it having completed.
+  if (init) app.use(init)
 
   app.use('/api', apiLimiter)
 

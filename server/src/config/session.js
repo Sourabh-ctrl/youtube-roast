@@ -22,6 +22,17 @@ export function sessionMiddleware(config, { mongoClient } = {}) {
       touchAfter: 24 * 60 * 60,
       crypto: { secret: SESSION_SECRET },
     })
+  } else if (config.mongoUri) {
+    // Lazy store: connect-mongo opens the connection on first use. This lets the
+    // serverless entry export the app without awaiting a DB connection at boot.
+    store = MongoStore.create({
+      mongoUrl: config.mongoUri,
+      dbName: config.mongoDb,
+      collectionName: 'sessions',
+      ttl: SESSION_TTL_SECONDS,
+      touchAfter: 24 * 60 * 60,
+      crypto: { secret: SESSION_SECRET },
+    })
   } else {
     logger.warn('Using in-memory session store. Do not use this outside development/tests.')
   }
