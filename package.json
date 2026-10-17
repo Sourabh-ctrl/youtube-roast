@@ -1,0 +1,15 @@
+{
+  "name": "roasttube",
+  "version": "1.0.0",
+  "private": true,
+  "description": "RoastTube — AI-powered YouTube roast. React client + Express server monorepo.",
+  "scripts": {
+    "install:all": "npm --prefix server install && npm --prefix client install",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "build": "npm --prefix client run build",
+    "lint": "npm --prefix server run lint && npm --prefix client run lint",
+    "test": "npm --prefix server test && npm --prefix client test"
+  },
+  "license": "ISC"
+}
