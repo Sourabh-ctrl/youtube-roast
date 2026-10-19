@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { screen } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import LandingPage from '../pages/LandingPage.jsx'
 import { renderWithProviders } from './helpers.jsx'
 
@@ -16,9 +16,21 @@ describe('LandingPage', () => {
   it('exposes the main navigation links', () => {
     renderWithProviders(<LandingPage />)
 
-    expect(screen.getByRole('link', { name: 'How it works' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Features' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Privacy' })).toBeInTheDocument()
+    const header = screen.getByRole('banner')
+    expect(within(header).getByRole('link', { name: 'How it works' })).toBeInTheDocument()
+    expect(within(header).getByRole('link', { name: 'Features' })).toBeInTheDocument()
+    expect(within(header).getByRole('link', { name: 'Privacy' })).toBeInTheDocument()
+  })
+
+  it('links to the privacy and terms pages from the footer', () => {
+    renderWithProviders(<LandingPage />)
+
+    const footer = screen.getByRole('contentinfo')
+    expect(within(footer).getByRole('link', { name: 'Privacy' })).toHaveAttribute(
+      'href',
+      '/privacy',
+    )
+    expect(within(footer).getByRole('link', { name: 'Terms' })).toHaveAttribute('href', '/terms')
   })
 
   it('labels the illustrative report preview as sample data', () => {
